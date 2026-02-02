@@ -51,8 +51,6 @@ async function getProducts(): Promise<Product[]> {
     }));
   } catch (error) {
     console.error("Fel vid hämtning:", error);
-
-    // Return an empty array to avoid crashing the UI
     return [];
   }
 }
@@ -70,15 +68,21 @@ export default async function Home(){
     return(
       <main>
         <h1 className="font-bold text-lg py-2 px-5">Min store</h1>
-        <ul>
+        <ul className="
+          grid
+          grid-cols-1
+          sm:grid-cols-2
+          md:grid-cols-3
+          lg:grid-cols-4
+          gap-6
+        ">
           {productList.map((product: Product) => (
             <li key={product.title} className="py-2 px-10">
-              <p className="font-bold">PRODUKT: </p>
               <p>{product.title}</p>
               <Image 
                 src={product.images[0]}
-                width={200}
-                height={200}
+                width={400}
+                height={400}
                 alt=""
               />
             </li>
@@ -87,7 +91,6 @@ export default async function Home(){
       </main>
     )
   } catch (error){
-    // Fallback UI if something unexpected happens
     return (
       <main>
         <h1>Något gick fel</h1>
