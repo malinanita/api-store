@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 /**
 * Product interface
@@ -79,12 +80,14 @@ export default async function Home(){
           {productList.map((product: Product) => (
             <li key={product.title} className="py-2 px-10">
               <p>{product.title}</p>
-              <Image 
-                src={product.images[0]}
-                width={400}
-                height={400}
-                alt=""
-              />
+              <Link href={`/products/${product.id}`} className="block">
+                <Image 
+                  src={product.images[0]}
+                  width={400}
+                  height={400}
+                  alt=""
+                />
+              </Link>
             </li>
           ))}
         </ul>
