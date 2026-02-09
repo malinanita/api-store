@@ -1,23 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
-
-/**
-* Product interface
-* Describes the shape of a product object as it is used in the app.
-* This helps TypeScript catch errors and gives better autocomplete.
-*/
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: {
-    id: number;
-    name: string;
-    image: string;
-  };
-  images: string[];
-}
+import ProductCard from "./components/product-card";
+import { Product } from "./types/product";
 
 /**
 * Fetches products from the external API.
@@ -31,11 +13,11 @@ async function getProducts(): Promise<Product[]> {
 
     // Handle HTTP errors
     if (!response.ok) {
-      throw new Error("Hittade inga produkter");
+      throw new Error("Hittade inga produkter")
     }
 
     // Parse response body as JSON
-    const data = await response.json();
+    const data = await response.json()
 
     // Map raw API data to the Product interface
     return data.map((details: any) => ({
@@ -77,18 +59,8 @@ export default async function Home(){
           lg:grid-cols-4
           gap-6
         ">
-          {productList.map((product: Product) => (
-            <li key={product.title} className="py-2 px-10">
-              <p>{product.title}</p>
-              <Link href={`/products/${product.id}`} className="block">
-                <Image 
-                  src={product.images[0]}
-                  width={400}
-                  height={400}
-                  alt=""
-                />
-              </Link>
-            </li>
+          {productList.map((product) => (
+            <ProductCard key={product.title} product={product} />
           ))}
         </ul>
       </main>
