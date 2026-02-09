@@ -1,3 +1,4 @@
+// A local server
 
 // NextResponse is Next.js way to send a http-answer from a API-route
 import { NextResponse } from "next/server"
@@ -7,18 +8,26 @@ import { NextResponse } from "next/server"
 // Alive as long as the server runs
 const likesStore = new Map<string, number>()
 
+// POST api/like
+// Called when user clicks like/unlike
 export async function POST(request: Request) {
+    // Reads body from request (sent from fetch in client)
     const { pokemonName, action } = await request.json()
 
+    // Fetch current amount of likes
+    // If it doesn't exist --> start from 0
     const currentLikes = likesStore.get(pokemonName) || 0
 
+    // Decide new amount of likes depending on action
     const newLikes =
         action === "like"
             ? currentLikes + 1
-            : Math.max(currentLikes - 1, 0)
+            : Math.max(currentLikes - 1, 0) //  unlike -1 --> but never beneath 0
 
+    // Saves new value in Map
     likesStore.set(pokemonName, newLikes)
 
+    // Return a JSON-answer to client
     return NextResponse.json({
         pokemonName,
         likes: newLikes,
