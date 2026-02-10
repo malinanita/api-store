@@ -1,40 +1,28 @@
 import Image from "next/image"
 import Link from "next/link"
-
-/**
-* Product interface
-* Describes the shape of a product object as it is used in the app.
-* This helps TypeScript catch errors and gives better autocomplete.
-*/
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: {
-    id: number;
-    name: string;
-    image: string;
-  };
-  images: string[];
-}
+import { Product } from "../types/product";
 
 interface ProductCardProps {
-    product: Product;
+  product: Product;
 }
 
-export default function ProductCard({product}: ProductCardProps){
+//export default function ProductCard({product}: {product: Product}){
+export default function ProductCard({productData}: ProductCardProps){
+    const imageSrc =
+    productData.images?.[0]?.startsWith("http")
+      ? productData.images[0]
+      : "/images/placeholder.jpg";
     return (
-        <li key={product.title} className="py-2 px-10">
-              <p>{product.title}</p>
-              <Link href={`/products/${product.id}`} className="block">
-                <Image 
-                  src={product.images[0]}
-                  width={400}
-                  height={400}
-                  alt=""
-                />
-              </Link>
-            </li>
+      <li key={productData.title} className="py-2 px-10">
+        <p>{productData.title}</p>
+        <Link href={`/products/${productData.id}`} className="block">
+          <Image 
+            src={imageSrc}
+            width={400}
+            height={400}
+            alt=""
+          />
+        </Link>
+      </li>
     )
 }

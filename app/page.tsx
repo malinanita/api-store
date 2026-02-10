@@ -60,7 +60,7 @@ export default async function Home(){
           gap-6
         ">
           {productList.map((product) => (
-            <ProductCard key={product.title} product={product} />
+            <ProductCard key={product.title} productData={product} />
           ))}
         </ul>
       </main>
