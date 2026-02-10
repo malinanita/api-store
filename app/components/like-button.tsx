@@ -21,23 +21,31 @@ export default function LikeButton({ productTitle, initialLikes }: LikeButtonPro
     const newHasLiked = !hasLiked;
     setHasLiked(newHasLiked);
 
-    // Send like/unlike action to the API route on the server
-    const res = await fetch("/api/like", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-      productTitle,
-      action: newHasLiked ? "like" : "unlike",
-    }),
-  });
+    try {
+      // Send like/unlike action to the API route on the server
+      const res = await fetch("/api/like", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productTitle, action: newHasLiked ? "like" : "unlike"}),
+      });
 
-  // Read updated like count from the server response
-  // Server is the source of truth
-  const data = await res.json();
+      if (!res.ok) {
+        throw new Error("Like request failed");
+      }
 
-  // Update UI with the latest number of likes
-  setLikes(data.likes);
-	};
+      // Read updated like count from the server response
+      // Server is the source of truth
+      const data = await res.json();
+      // Update UI with the latest number of likes
+      setLikes(data.likes);
+
+    } catch (error) {
+      console.error("Error updating like:", error);
+      // Revert like-status in case of an error
+      setHasLiked(!newHasLiked);
+    }
+  };
+
 
 	return (
 		<button
