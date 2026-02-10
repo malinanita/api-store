@@ -14,8 +14,8 @@ type PageProps = {
 
 /**
 * Fetches products from the external API.
-* Always returns an array of Product objects.
-* If something goes wrong, an empty array is returned instead.
+* Returns an array of Product objects.
+* If something goes wrong, an error is thrown.
 */
 async function getProducts(): Promise<Product[]> {
   try {
@@ -45,7 +45,7 @@ async function getProducts(): Promise<Product[]> {
     }));
   } catch (error) {
     console.error("Fel vid hämtning:", error);
-    return [];
+    throw new Error("Could not load products")
   }
 }
 
@@ -79,7 +79,7 @@ export default async function Home({ searchParams }: PageProps){
         <Link href="/">Alla</Link>
         <Link href="/?category=Clothes">Clothes</Link>
         <Link href="/?category=Furniture">Furniture</Link>
-        <Link href="/?category=Shoes">Shoes</Link>
+        <Link href="/?category=Electronics">Electronics</Link>
       </nav>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
