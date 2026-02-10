@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react";
 
 interface LikeButtonProps {
@@ -32,7 +31,11 @@ export default function LikeButton({ productTitle, initialLikes }: LikeButtonPro
     }),
   });
 
+  // Read updated like count from the server response
+  // Server is the source of truth
   const data = await res.json();
+
+  // Update UI with the latest number of likes
   setLikes(data.likes);
 	};
 

@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { Product } from "../types/product";
 import LikeButton from "./like-button";
@@ -9,11 +8,7 @@ interface ProductCardProps {
 
 //export default function ProductCard({product}: {product: Product}){
 export default async function ProductCard({productData}: ProductCardProps){
-    const imageSrc =
-    productData.images?.[0]?.startsWith("http")
-      ? productData.images[0]
-      : "/images/placeholder.jpg";
-
+ 
     const res = await fetch(`http://localhost:3000/api/like?productTitle=${productData.title}`, { 
       cache: 'no-store' 
     });

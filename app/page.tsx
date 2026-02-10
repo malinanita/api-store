@@ -1,6 +1,11 @@
 import ProductCard from "./components/product-card";
 import { Product } from "./types/product";
+import Link from "next/link";
 
+/**
+* Page props provided by Next.js.
+* searchParams contains URL query values and must be awaited.
+*/
 type PageProps = {
   searchParams: Promise<{
     category?: string
@@ -47,16 +52,17 @@ async function getProducts(): Promise<Product[]> {
 
 /**
 * Home page component (Server Component)
-* Fetches products and renders a simple product list.
+* Uses searchParams to optionally filter products by category.
 */
 export default async function Home({ searchParams }: PageProps){
-  //console.log("searchParams:", searchParams)
-
+  // Await the searchParams Promise to access the actual query values
   const { category } = await searchParams
 
   // Use function to fetch products from the API
   const productList = await getProducts();
 
+  // If a category is provided in the URL, filter the products by category name.
+  // Otherwise, show all products.
   const filteredProducts = category
     ? productList.filter(
         product =>
@@ -70,10 +76,10 @@ export default async function Home({ searchParams }: PageProps){
       <h1 className="font-bold text-lg py-2 px-5">Min store</h1>
 
       <nav className="flex gap-4 px-5 py-2">
-        <a href="/">Alla</a>
-        <a href="/?category=Clothes">Clothes</a>
-        <a href="/?category=Furniture">Furniture</a>
-        <a href="/?category=Shoes">Shoes</a>
+        <Link href="/">Alla</Link>
+        <Link href="/?category=Clothes">Clothes</Link>
+        <Link href="/?category=Furniture">Furniture</Link>
+        <Link href="/?category=Shoes">Shoes</Link>
       </nav>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
