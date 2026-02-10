@@ -1,6 +1,12 @@
 import ProductCard from "./components/product-card";
 import { Product } from "./types/product";
 
+type PageProps = {
+  searchParams: Promise<{
+    category?: string
+  }>
+}
+
 /**
 * Fetches products from the external API.
 * Always returns an array of Product objects.
@@ -43,35 +49,40 @@ async function getProducts(): Promise<Product[]> {
 * Home page component (Server Component)
 * Fetches products and renders a simple product list.
 */
-export default async function Home(){
-  try {
-    // Use function to fetch products from the API
-    const productList = await getProducts();
+export default async function Home({ searchParams }: PageProps){
+  //console.log("searchParams:", searchParams)
 
-    return(
-      <main>
-        <h1 className="font-bold text-lg py-2 px-5">Min store</h1>
-        <ul className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          md:grid-cols-3
-          lg:grid-cols-4
-          gap-6
-        ">
-          {productList.map((product) => (
-            <ProductCard key={product.title} productData={product} />
-          ))}
-        </ul>
-      </main>
-    )
-  } catch (error){
-    return (
-      <main>
-        <h1>Något gick fel</h1>
-        <p>Kunde inte ladda några produkter</p>
-      </main>
-    )
-  }
-}
+  const { category } = await searchParams
+
+  // Use function to fetch products from the API
+  const productList = await getProducts();
+
+  const filteredProducts = category
+    ? productList.filter(
+        product =>
+          product.category.name.toLowerCase() ===
+          category.toLowerCase()
+      )
+    : productList
+
+  return(
+    <main>
+      <h1 className="font-bold text-lg py-2 px-5">Min store</h1>
+
+      <nav className="flex gap-4 px-5 py-2">
+        <a href="/">Alla</a>
+        <a href="/?category=Clothes">Clothes</a>
+        <a href="/?category=Furniture">Furniture</a>
+        <a href="/?category=Shoes">Shoes</a>
+      </nav>
+
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {filteredProducts.map((product) => (
+          <ProductCard key={product.title} productData={product} />
+        ))}
+      </ul>
+    </main>
+  )
+} 
+
 
